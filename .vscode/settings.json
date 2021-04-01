@@ -1,0 +1,13 @@
+{
+  "jumpToAliasFile.alias": {
+    "react": "/Users/m1/github/react/build/node_modules/react",
+    "react-debug-tools": "/Users/m1/github/react/build/node_modules/react-debug-tools",
+    "react-devtools-feature-flags": "/Users/m1/github/react/packages/react-devtools-shared/src/config/DevToolsFeatureFlags.default",
+    "react-dom": "/Users/m1/github/react/build/node_modules/react-dom",
+    "react-is": "/Users/m1/github/react/build/node_modules/react-is",
+    "scheduler": "/Users/m1/github/react/build/node_modules/scheduler",
+    "react-refresh": "/Users/m1/github/react/build/node_modules/react-refresh"
+  },
+  "javascript.validate.enable": false,
+  "flow.pathToFlow": "${workspaceRoot}/node_modules/.bin/flow"
+}
