@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "run",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:9067",
+      "webRoot": "${workspaceFolder}/dist"
+    },
+    {
       "name": "build",
       "program": "${workspaceFolder}/scripts/rollup/build.js",
       "request": "launch",

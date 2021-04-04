@@ -106,6 +106,7 @@
     "testRegex": "/scripts/jest/dont-run-jest-directly\\.js$"
   },
   "scripts": {
+    "start": "serve -p 9067 dist",
     "build": "node ./scripts/rollup/build.js && npm run move",
     "move": "cp build/node_modules/react-dom/umd/react-dom.development.js dist && cp build/node_modules/react/umd/react.development.js dist",
     "build-combined": "node ./scripts/rollup/build-all-release-channels.js",
