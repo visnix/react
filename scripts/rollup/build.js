@@ -116,22 +116,22 @@ const closureOptions = {
 const babelPlugins = [
   // These plugins filter out non-ES2015.
   '@babel/plugin-transform-flow-strip-types',
-  ['@babel/plugin-proposal-class-properties', {loose: true}],
-  'syntax-trailing-function-commas',
+  // ['@babel/plugin-proposal-class-properties', {loose: true}],
+  // 'syntax-trailing-function-commas',
   // These use loose mode which avoids embedding a runtime.
   // TODO: Remove object spread from the source. Prefer Object.assign instead.
-  [
-    '@babel/plugin-proposal-object-rest-spread',
-    {loose: true, useBuiltIns: true},
-  ],
-  ['@babel/plugin-transform-template-literals', {loose: true}],
+  // [
+  //   '@babel/plugin-proposal-object-rest-spread',
+  //   {loose: true, useBuiltIns: true},
+  // ],
+  // ['@babel/plugin-transform-template-literals', {loose: true}],
   // TODO: Remove for...of from the source. It requires a runtime to be embedded.
-  '@babel/plugin-transform-for-of',
+  // '@babel/plugin-transform-for-of',
   // TODO: Remove array spread from the source. Prefer .apply instead.
-  ['@babel/plugin-transform-spread', {loose: true, useBuiltIns: true}],
-  '@babel/plugin-transform-parameters',
+  // ['@babel/plugin-transform-spread', {loose: true, useBuiltIns: true}],
+  // '@babel/plugin-transform-parameters',
   // TODO: Remove array destructuring from the source. Requires runtime.
-  ['@babel/plugin-transform-destructuring', {loose: true, useBuiltIns: true}],
+  // ['@babel/plugin-transform-destructuring', {loose: true, useBuiltIns: true}],
 ];
 
 const babelToES5Plugins = [
@@ -160,6 +160,9 @@ function getBabelConfig(
     presets: [],
     plugins: [...babelPlugins],
   };
+  if ('关闭插件') {
+    return options;
+  }
   if (isDevelopment) {
     options.plugins.push(
       ...babelToES5Plugins,
@@ -236,7 +239,7 @@ function getRollupOutputOptions(
     interop: false,
     name: globalName,
     sourcemap: false,
-    esModule: false,
+    esModule: true,
   };
 }
 
@@ -362,7 +365,7 @@ function getPlugins(
     bundleType === RN_FB_DEV ||
     bundleType === RN_FB_PROD ||
     bundleType === RN_FB_PROFILING;
-  const shouldStayReadable = isFBWWWBundle || isRNBundle || forcePrettyOutput;
+  const shouldStayReadable = isFBWWWBundle || isRNBundle || forcePrettyOutput || true;
   return [
     // Extract error codes from invariant() messages into a file.
     shouldExtractErrors && {
@@ -536,10 +539,14 @@ async function createBundle(bundle, bundleType) {
     return;
   }
 
+  if (bundleType !== 'UMD_DEV') {
+    return
+  }
+
   const filename = getFilename(bundle, bundleType);
   const logKey =
     chalk.white.bold(filename) + chalk.dim(` (${bundleType.toLowerCase()})`);
-  const format = getFormat(bundleType);
+  const format = 'es' || getFormat(bundleType);
   const packageName = Packaging.getPackageName(bundle.entry);
 
   const isFBWWWBundle =
@@ -614,7 +621,7 @@ async function createBundle(bundle, bundleType) {
       externalLiveBindings: false,
       freeze: false,
       interop: false,
-      esModule: false,
+      esModule: true,
     },
   };
   const mainOutputPath = Packaging.getBundleOutputPath(
@@ -649,16 +656,18 @@ async function createBundle(bundle, bundleType) {
       }
     });
   } else {
-    console.log(`${chalk.bgYellow.black(' BUILDING ')} ${logKey}`);
-    try {
-      const result = await rollup.rollup(rollupConfig);
-      await result.write(rollupOutputOptions);
-    } catch (error) {
-      console.log(`${chalk.bgRed.black(' OH NOES! ')} ${logKey}\n`);
-      handleRollupError(error);
-      throw error;
+    if (/\/packages(\/react\/|\/react-dom\/)/.test(rollupConfig.input)) {
+      console.log(`${chalk.bgYellow.black(' BUILDING ')} ${logKey}`);
+      try {
+        const result = await rollup.rollup(rollupConfig);
+        await result.write(rollupOutputOptions);
+      } catch (error) {
+        console.log(`${chalk.bgRed.black(' OH NOES! ')} ${logKey}\n`);
+        handleRollupError(error);
+        throw error;
+      }
+      console.log(`${chalk.bgGreen.black(' COMPLETE ')} ${logKey}\n`);
     }
-    console.log(`${chalk.bgGreen.black(' COMPLETE ')} ${logKey}\n`);
   }
 }
 

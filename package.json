@@ -106,7 +106,8 @@
     "testRegex": "/scripts/jest/dont-run-jest-directly\\.js$"
   },
   "scripts": {
-    "build": "node ./scripts/rollup/build.js",
+    "build": "node ./scripts/rollup/build.js && npm run move",
+    "move": "cp build/node_modules/react-dom/umd/react-dom.development.js dist && cp build/node_modules/react/umd/react.development.js dist",
     "build-combined": "node ./scripts/rollup/build-all-release-channels.js",
     "build-for-devtools": "cross-env RELEASE_CHANNEL=experimental yarn build react/index,react-dom,react-is,react-debug-tools,scheduler,react-test-renderer,react-refresh --type=NODE",
     "build-for-devtools-dev": "yarn build-for-devtools --type=NODE_DEV",
