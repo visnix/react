@@ -22485,9 +22485,11 @@ function getPublicRootInstance(container) {
 
   switch (containerFiber.child.tag) {
     case HostComponent:
+      performance.mark('===>3')
       return getPublicInstance(containerFiber.child.stateNode);
 
     default:
+      performance.mark('===>4')
       return containerFiber.child.stateNode;
   }
 }
